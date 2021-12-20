@@ -34,7 +34,6 @@ class EchoServerProtocol(asyncio.Protocol):
         message = data.decode()
         print('Data received: {!r}'.format(message))
 
-        # print('Send: {!r}'.format(message))
         # self.transport.write(data)
         """Handler for conncetions"""
         global last_edit, editor, USERS, txt
@@ -63,12 +62,14 @@ class EchoServerProtocol(asyncio.Protocol):
                     # check last_Edit time less than 5 seconds
                     if editor == self.transport or (datetime.now() -
                                                     last_edit).seconds > 5:
-                        editor = self.transport
-                        send_all(f'editor:{USERS[self.transport]}')
+                        if editor != self.transport:
+                            editor = self.transport
+                            send_all(f'editor:{USERS[self.transport]}')
                         last_edit = datetime.now()
                         # edit
                         txt = data.split(':')[1]
                         send_all(f'txt:{txt}')
+
                     else:
                         self.transport.write(b'status:Editing is on cooldown')
         else:
