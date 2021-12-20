@@ -135,6 +135,3 @@ class GUI:
 
 
 g = GUI()
-
-# asyncio.run(run_server())
-# entry_2.insert('Server started')
